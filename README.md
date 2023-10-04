@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+carrousel////////////////
 
-## Getting Started
+import Image from 'next/image';
+import { useState, useEffect } from 'react';
+import classNames from 'classnames';
 
-First, run the development server:
+const BackgroundImage = () => {
+  const [currentImage, setCurrentImage] = useState(0);
+  const images = [
+    '/image1.jpg',
+    '/image2.jpg',
+    '/image3.jpg'
+  ];
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImage((prevImage) => (prevImage + 1) % images.length);
+    }, 2000);
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+    return () => clearInterval(interval);
+  }, []);
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+  return (
+    <div className="relative">
+      {images.map((image, index) => (
+        <Image
+          key={index}
+          src={image}
+          layout="fill"
+          objectFit="cover"
+          className={classNames(
+            'absolute top-0 left-0',
+            {
+              'opacity-100': index === currentImage,
+              'opacity-0': index !== currentImage,
+              'transition-opacity duration-500': true,
+            }
+          )}
+          alt={`Image ${index}`}
+        />
+      ))}
+    </div>
+  );
+};
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+export default BackgroundImage;
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+////transiciones////////
+en tailwind config:
+module.exports = {
+  // Otras configuraciones...
+  theme: {
+    extend: {
+      transitionProperty: {
+        'opacity': 'opacity',
+      },
+      animation: {
+        'fade-in': 'fadeIn 0.5s ease-in-out',
+        'fade-out': 'fadeOut 0.5s ease-in-out',
+      },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        fadeOut: {
+          '0%': { opacity: '1' },
+          '100%': { opacity: '0' },
+        },
+      },
+    },
+  },
+};
