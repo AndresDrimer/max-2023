@@ -29,7 +29,7 @@ function Carrousel() {
 
   return (
     <div className="flex-grow">
-      <div className="md:mt-[10vh]">
+      <div className="md:mt-[10vh] md:mx-auto md:w-2/3 lg:w-1/2 lg:mx-auto">
         <Image
           src={carrouselImages[currentImage].imagePath}
           alt="imagen"        
